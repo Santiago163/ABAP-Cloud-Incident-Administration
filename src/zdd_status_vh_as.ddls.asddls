@@ -16,6 +16,6 @@ define view entity zdd_status_vh_as as select from DDCDS_CUSTOMER_DOMAIN_VALUE_T
     //key language,
     key value_low  as StatusCode,
     @Semantics.text: true
-    text as StatusDescription
+    cast(text as zde_description_as) as StatusDescription
      
 }

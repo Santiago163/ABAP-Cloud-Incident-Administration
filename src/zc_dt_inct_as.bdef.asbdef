@@ -1,7 +1,7 @@
 projection implementation in class zbp_c_dt_inct_as unique;
 strict ( 2 );
 use draft;
-
+use side effects;
 define behavior for zc_dt_inct_as alias Incident
 use etag
 {

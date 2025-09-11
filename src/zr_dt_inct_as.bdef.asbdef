@@ -35,6 +35,8 @@ authorization master ( global, instance )
   action ( features : instance, authorization : update ) changeStatus
     parameter za_change_status_as result [1] $self;
 
+    side effects { action changeStatus affects $self; }
+
   internal action setHistory;
   determination setDefaultHistory on save { create; }
 

@@ -25,6 +25,5 @@ define root view entity ZR_DT_INCT_AS
       last_changed_at       as LastChangedAt,
       //  Associations
       _History
-
       
 }
