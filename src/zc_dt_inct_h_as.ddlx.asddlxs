@@ -5,7 +5,7 @@
                      title:          { type: #STANDARD,
                                        label: 'History',
                                        value: 'HisID' } },
-       presentationVariant: [{ sortOrder: [{ by: 'NewStatus',
+       presentationVariant: [{ sortOrder: [{ by: 'HisId',
                                           direction: #DESC } ],                                          
        visualizations: [{ type: #AS_LINEITEM}]}] }
 annotate entity zc_dt_inct_h_as with

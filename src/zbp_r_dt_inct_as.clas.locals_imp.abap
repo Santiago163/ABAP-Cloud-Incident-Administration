@@ -29,17 +29,45 @@ CLASS lhc_Incident DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS setdefaulthistory FOR DETERMINE ON SAVE
       IMPORTING keys FOR incident~setdefaulthistory.
-    METHODS get_history_index
-      EXPORTING
-        ev_incuuid      TYPE sysuuid_x16
+    METHODS get_history_index EXPORTING ev_incuuid      TYPE sysuuid_x16
+                              RETURNING VALUE(rv_index) TYPE zde_his_id_lgl.
+    METHODS is_update_allowed
       RETURNING
-        VALUE(r_result) TYPE zde_his_id_as.
+        VALUE(r_result) TYPE abap_bool.
 
 ENDCLASS.
 
 CLASS lhc_Incident IMPLEMENTATION.
 
   METHOD get_instance_authorizations.
+    DATA: update_requested TYPE abap_bool,
+          update_grtanted  TYPE abap_bool.
+
+    READ ENTITIES OF zr_dt_inct_as IN LOCAL MODE
+      ENTITY Incident
+      FIELDS ( Status ) WITH CORRESPONDING #( keys )
+      RESULT DATA(Incidents)
+      FAILED failed.
+    CHECK Incidents IS NOT INITIAL.
+    update_requested = COND #( WHEN requested_authorizations-%update = if_abap_behv=>mk-on THEN
+                                    abap_true ELSE abap_false ).
+
+    LOOP AT Incidents ASSIGNING FIELD-SYMBOL(<lfs_incident>).
+      IF update_requested = abap_true.
+        update_grtanted = is_update_allowed(  ).
+        IF update_grtanted = abap_false.
+          APPEND VALUE #(  %tky = <lfs_incident>-%tky ) TO failed-incident.
+          APPEND VALUE #( %tky = keys[ 1 ]-%tky
+                          %msg = new_message_with_text(
+                              severity = if_abap_behv_message=>severity-error
+                              text = 'No Authorization to update status!!!'
+                          )
+          ) TO reported-incident.
+        ENDIF.
+      ENDIF.
+    ENDLOOP.
+
+
   ENDMETHOD.
 
   METHOD get_global_authorizations.
@@ -63,7 +91,10 @@ CLASS lhc_Incident IMPLEMENTATION.
 
     result = VALUE #( FOR incident IN incidents
                           ( %tky                   = incident-%tky
-                            %action-ChangeStatus   = COND #( WHEN incident-Status IN lt_disableChange  OR
+                            %action-ChangeStatus   = COND #( ""WHEN incident-Status IN lt_disableChange  OR
+                                                             WHEN incident-Status = gs_status-completed OR
+                                                                  incident-Status = gs_status-closed    OR
+                                                                  incident-Status = gs_status-canceled  OR
                                                                   lv_history_index = 0
                                                              THEN if_abap_behv=>fc-o-disabled
                                                              ELSE if_abap_behv=>fc-o-enabled )
@@ -100,6 +131,21 @@ CLASS lhc_Incident IMPLEMENTATION.
 ** Get Status
       lv_status = keys[ KEY id %tky = <incident>-%tky ]-%param-status.
 
+** Validar responsable
+      DATA(lv_responsable) = keys[ KEY id %tky = <incident>-%tky ]-%param-responsible.
+      IF lv_status = gs_status-in_progress AND lv_responsable IS INITIAL.
+** Set authorizations
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incident.
+
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_incident_messages_as( textid = zcl_incident_messages_as=>status_ip
+                                                            status = lv_status
+                                                            severity = if_abap_behv_message=>severity-error )
+                        %state_area = 'VALIDATE_RESPONSIBLE'
+                         ) TO reported-incident.
+        lv_error = abap_true.
+        EXIT.
+      ENDIF.
 **  It is not possible to change the pending (PE) to Completed (CO) or Closed (CL) status
       IF <incident>-Status EQ gs_status-pending AND lv_status EQ gs_status-closed OR
          <incident>-Status EQ gs_status-pending AND lv_status EQ gs_status-completed.
@@ -118,10 +164,16 @@ CLASS lhc_Incident IMPLEMENTATION.
         EXIT.
       ENDIF.
 
-      APPEND VALUE #( %tky = <incident>-%tky
-                      ChangedDate = cl_abap_context_info=>get_system_date( )
-                      Status = lv_status ) TO lt_updated_root_entity.
-
+      IF lv_status = gs_status-in_progress AND lv_responsable IS NOT INITIAL.
+        APPEND VALUE #( %tky = <incident>-%tky
+                  ChangedDate = cl_abap_context_info=>get_system_date( )
+                  Status = lv_status
+                  responsible = lv_responsable ) TO lt_updated_root_entity.
+      ELSE.
+        APPEND VALUE #( %tky = <incident>-%tky
+                        ChangedDate = cl_abap_context_info=>get_system_date( )
+                        Status = lv_status ) TO lt_updated_root_entity.
+      ENDIF.
 ** Get Text
       lv_text = keys[ KEY id %tky = <incident>-%tky ]-%param-text.
 
@@ -158,16 +210,25 @@ CLASS lhc_Incident IMPLEMENTATION.
     ENDLOOP.
     UNASSIGN <incident>.
 
-** The process is interrupted because a change of status from pending (PE) to Completed (CO) or Closed (CL) is not permitted.
+* The process is interrupted because a change of status from pending (PE) to Completed (CO) or Closed (CL) is not permitted.
     CHECK lv_error IS INITIAL.
 
-** Modify status in Root Entity
-    MODIFY ENTITIES OF zr_dt_inct_as IN LOCAL MODE
-    ENTITY Incident
-    UPDATE  FIELDS ( ChangedDate
-                     Status )
-    WITH lt_updated_root_entity.
+    IF lv_status = gs_status-in_progress AND lv_responsable IS NOT INITIAL.
+      MODIFY ENTITIES OF zr_dt_inct_as IN LOCAL MODE
+      ENTITY Incident
+      UPDATE  FIELDS ( ChangedDate
+                       Status
+                      responsible )
+      WITH lt_updated_root_entity.
+    ELSE.
 
+** Modify status in Root Entity
+      MODIFY ENTITIES OF zr_dt_inct_as IN LOCAL MODE
+      ENTITY Incident
+      UPDATE  FIELDS ( ChangedDate
+                       Status )
+      WITH lt_updated_root_entity.
+    ENDIF.
     FREE incidents. " Free entries in incidents
 
     MODIFY ENTITIES OF zr_dt_inct_as IN LOCAL MODE
@@ -300,7 +361,12 @@ CLASS lhc_Incident IMPLEMENTATION.
 
 
   METHOD get_history_index.
-
+** Fill history data
+    SELECT FROM zdt_inct_h_as
+      FIELDS MAX( his_id ) AS max_his_id
+      WHERE inc_uuid EQ @ev_incuuid AND
+            his_uuid IS NOT NULL
+      INTO @rv_index.
   ENDMETHOD.
 
   METHOD class_constructor.
@@ -308,6 +374,12 @@ CLASS lhc_Incident IMPLEMENTATION.
     APPEND VALUE #( sign = 'I' option = 'EQ' low = gs_status-completed ) TO lt_disableChange.
     APPEND VALUE #( sign = 'I' option = 'EQ' low = gs_status-closed ) TO lt_disableChange.
     APPEND VALUE #( sign = 'I' option = 'EQ' low = gs_status-canceled ) TO lt_disableChange.
+  ENDMETHOD.
+
+
+  METHOD is_update_allowed.
+* para simulacion
+    r_result = abap_true.
   ENDMETHOD.
 
 ENDCLASS.

@@ -14,6 +14,12 @@
      <MSGNR>001</MSGNR>
      <TEXT>Status &amp;1 is not valid. Pending (PE) can´t change to CO or CL Status</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_INCT_MESSAGE_AS</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>With Status &amp;1, the responsible person must be entered.</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

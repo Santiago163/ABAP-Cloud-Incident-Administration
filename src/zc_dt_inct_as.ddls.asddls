@@ -20,6 +20,7 @@ define root view entity zc_dt_inct_as
   virtual PriorityDescription : zde_priority_description_as,
           CreationDate,
           ChangedDate,
+          Responsible,
           LocalCreatedBy,
           LocalCreatedAt,
           LocalLastChangedBy,

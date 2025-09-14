@@ -19,6 +19,7 @@ authorization master ( global, instance )
   IncUuid,
   IncidentID,
   Status,
+  responsible,
   ChangedDate,
   LocalCreatedBy,
   LocalCreatedAt,
@@ -54,6 +55,7 @@ authorization master ( global, instance )
       Description        = description;
       Status             = status;
       Priority           = priority;
+      Responsible        = responsible;
       CreationDate       = creation_date;
       ChangedDate        = changed_date;
       LocalCreatedBy     = local_created_by;

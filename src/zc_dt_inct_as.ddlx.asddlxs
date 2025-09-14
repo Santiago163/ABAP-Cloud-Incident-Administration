@@ -102,7 +102,13 @@ annotate view zc_dt_inct_as with
   identification: [{ position: 150  } ],
   selectionField: [{ position: 150 }]}
   ChangedDate;
-
+  
+  @UI: {lineItem: [{ position: 160,
+               importance: #LOW }],
+  identification: [{ position: 160  } ],
+  selectionField: [{ position: 160 }]}
+  Responsible;
+  
   @UI: {lineItem: [{ position: 100,
                importance: #LOW }],
   identification: [{ position: 100  } ],

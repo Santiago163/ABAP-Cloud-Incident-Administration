@@ -19,25 +19,36 @@ CLASS zcl_incident_messages_as DEFINITION
         attr2 TYPE scx_attrname VALUE '',
         attr3 TYPE scx_attrname VALUE '',
         attr4 TYPE scx_attrname VALUE '',
-      END OF status_invalid.
+      END OF status_invalid,
+
+      BEGIN OF status_IP,
+        msgid TYPE symsgid VALUE 'ZMC_INCT_MESSAGE_AS',
+        msgno TYPE symsgno VALUE '002',
+        attr1 TYPE scx_attrname VALUE 'MV_STATUS',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF status_IP.
 
     METHODS constructor
       IMPORTING
-        textid                LIKE if_t100_message=>t100key OPTIONAL
-        attr1                 TYPE string OPTIONAL
-        attr2                 TYPE string OPTIONAL
-        attr3                 TYPE string OPTIONAL
-        attr4                 TYPE string OPTIONAL
-        previous              LIKE previous OPTIONAL
-        status                TYPE zde_status2_lgl OPTIONAL
-        severity              TYPE if_abap_behv_message=>t_severity OPTIONAL.
+        textid      LIKE if_t100_message=>t100key OPTIONAL
+        attr1       TYPE string OPTIONAL
+        attr2       TYPE string OPTIONAL
+        attr3       TYPE string OPTIONAL
+        attr4       TYPE string OPTIONAL
+        previous    LIKE previous OPTIONAL
+        status      TYPE zde_status_as OPTIONAL
+        responsible TYPE syuname OPTIONAL
+        severity    TYPE if_abap_behv_message=>t_severity OPTIONAL.
 
-     DATA:
-      mv_attr1                 TYPE string,
-      mv_attr2                 TYPE string,
-      mv_attr3                 TYPE string,
-      mv_attr4                 TYPE string,
-      mv_status                TYPE zde_status_as.
+    DATA:
+      mv_attr1       TYPE string,
+      mv_attr2       TYPE string,
+      mv_attr3       TYPE string,
+      mv_attr4       TYPE string,
+      mv_responsible TYPE syuname,
+      mv_status      TYPE zde_status_as.
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -55,7 +66,7 @@ CLASS zcl_incident_messages_as IMPLEMENTATION.
     me->mv_attr3                 = attr3.
     me->mv_attr4                 = attr4.
     me->mv_status                = status.
-
+    me->mv_responsible           = responsible.
 
     if_abap_behv_message~m_severity = severity.
 
