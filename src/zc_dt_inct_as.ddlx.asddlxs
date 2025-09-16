@@ -34,14 +34,14 @@ annotate view zc_dt_inct_as with
                { type: #FOR_ACTION,
                  dataAction: 'changeStatus',
                  label: 'Change Status',
-                 position: 10 } ],
-  selectionField: [{ position: 10 }]}
+                 position: 10 } ]}
+  //selectionField: [{ position: 10 }]}
   IncUuid;
 
   @UI: {lineItem: [{ position: 20,
                importance: #MEDIUM }],
-  identification: [{ position: 20  } ],
-  selectionField: [{ position: 20 }]}
+  identification: [{ position: 20  } ]}
+  //selectionField: [{ position: 20 }]}
   IncidentId;
 
   @UI: {lineItem: [{ position: 30,
@@ -53,8 +53,8 @@ annotate view zc_dt_inct_as with
 
   @UI: {lineItem: [{ position: 40,
                importance: #LOW }],
-  identification: [{ position: 40  } ],
-  selectionField: [{ position: 40 }]}
+  identification: [{ position: 40  } ]}
+  //selectionField: [{ position: 40 }]}
   Description;
 
   @Consumption.valueHelpDefinition: [ {
@@ -70,8 +70,8 @@ annotate view zc_dt_inct_as with
 
   @UI: {lineItem: [{ position: 80,
                importance: #LOW }],
-  identification: [{ position: 80  } ],
-  selectionField: [{ position: 80 }] }
+  identification: [{ position: 80  } ]}
+  //selectionField: [{ position: 80 }] }
   StatusDescription;  
 
   @Consumption.valueHelpDefinition: [ {
@@ -87,20 +87,20 @@ annotate view zc_dt_inct_as with
   
     @UI: {lineItem: [{ position: 90,
                importance: #LOW }],
-  identification: [{ position: 90  } ],
-  selectionField: [{ position: 90 }] }
+  identification: [{ position: 90  } ]}
+  //selectionField: [{ position: 90 }] }
   PriorityDescription;  
 
   @UI: {lineItem: [{ position: 70,
                importance: #LOW }],
-  identification: [{ position: 70  } ],
-  selectionField: [{ position: 70 }]}
+  identification: [{ position: 70  } ]}
+  //selectionField: [{ position: 70 }]}
   CreationDate;
 
   @UI: {lineItem: [{ position: 150,
                importance: #LOW }],
-  identification: [{ position: 150  } ],
-  selectionField: [{ position: 150 }]}
+  identification: [{ position: 150  } ]}
+  //selectionField: [{ position: 150 }]}
   ChangedDate;
   
   @UI: {lineItem: [{ position: 160,
@@ -111,36 +111,36 @@ annotate view zc_dt_inct_as with
   
   @UI: {lineItem: [{ position: 100,
                importance: #LOW }],
-  identification: [{ position: 100  } ],
-  selectionField: [{ position: 1000 }]}
+  identification: [{ position: 100  } ]}
+  //selectionField: [{ position: 1000 }]}
   @UI.hidden: true
   LocalCreatedBy;
 
   @UI: {lineItem: [{ position: 110,
                importance: #LOW }],
-  identification: [{ position: 110  } ],
-  selectionField: [{ position: 110 }]}
+  identification: [{ position: 110  } ]}
+  //selectionField: [{ position: 110 }]}
   @UI.hidden: true
   LocalCreatedAt;
 
   @UI: {lineItem: [{ position: 120,
                importance: #LOW }],
-  identification: [{ position: 120  } ],
-  selectionField: [{ position: 120 }]}
+  identification: [{ position: 120  } ]}
+  //selectionField: [{ position: 120 }]}
   @UI.hidden: true
   LocalLastChangedBy;
 
   @UI: {lineItem: [{ position: 130,
                importance: #LOW }],
-  identification: [{ position: 130  } ],
-  selectionField: [{ position: 130 }]}
+  identification: [{ position: 130  } ]}
+  //selectionField: [{ position: 130 }]}
   @UI.hidden: true
   LocalLastChangedAt;
 
   @UI: {lineItem: [{ position: 140,
                importance: #LOW }],
-  identification: [{ position: 140  } ],
-  selectionField: [{ position: 140 }]}
+  identification: [{ position: 140  } ]}
+  //selectionField: [{ position: 140 }]}
   @UI.hidden: true
   LastChangedAt;
 

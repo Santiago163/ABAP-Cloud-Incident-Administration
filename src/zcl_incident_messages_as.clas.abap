@@ -28,7 +28,61 @@ CLASS zcl_incident_messages_as DEFINITION
         attr2 TYPE scx_attrname VALUE '',
         attr3 TYPE scx_attrname VALUE '',
         attr4 TYPE scx_attrname VALUE '',
-      END OF status_IP.
+      END OF status_IP,
+
+    begin of status_empty,
+    msgid type symsgid value 'ZMC_INCT_MESSAGE_AS',
+    msgno type symsgno value '003',
+    attr1 type scx_attrname value '',
+    attr2 type scx_attrname value '',
+    attr3 type scx_attrname value '',
+    attr4 type scx_attrname value '',
+    end of status_empty,
+
+       begin of title_empty,
+    msgid type symsgid value 'ZMC_INCT_MESSAGE_AS',
+    msgno type symsgno value '004',
+    attr1 type scx_attrname value '',
+    attr2 type scx_attrname value '',
+    attr3 type scx_attrname value '',
+    attr4 type scx_attrname value '',
+    end of title_empty,
+
+    begin of description_empty,
+    msgid type symsgid value 'ZMC_INCT_MESSAGE_AS',
+    msgno type symsgno value '005',
+    attr1 type scx_attrname value '',
+    attr2 type scx_attrname value '',
+    attr3 type scx_attrname value '',
+    attr4 type scx_attrname value '',
+    end of description_empty,
+
+        begin of priority_empty,
+    msgid type symsgid value 'ZMC_INCT_MESSAGE_AS',
+    msgno type symsgno value '006',
+    attr1 type scx_attrname value '',
+    attr2 type scx_attrname value '',
+    attr3 type scx_attrname value '',
+    attr4 type scx_attrname value '',
+    end of priority_empty,
+
+    begin of date_empty,
+    msgid type symsgid value 'ZMC_INCT_MESSAGE_AS',
+    msgno type symsgno value '007',
+    attr1 type scx_attrname value '',
+    attr2 type scx_attrname value '',
+    attr3 type scx_attrname value '',
+    attr4 type scx_attrname value '',
+    end of date_empty,
+
+    begin of date_future,
+    msgid type symsgid value 'ZMC_INCT_MESSAGE_AS',
+    msgno type symsgno value '008',
+    attr1 type scx_attrname value '',
+    attr2 type scx_attrname value '',
+    attr3 type scx_attrname value '',
+    attr4 type scx_attrname value '',
+    end of date_future.
 
     METHODS constructor
       IMPORTING

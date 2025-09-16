@@ -13,6 +13,14 @@
     <UNICODE>X</UNICODE>
     <CLSDEFINT>ZR_DT_INCT_AS</CLSDEFINT>
    </VSEOCLASS>
+   <TPOOL>
+    <item>
+     <ID>I</ID>
+     <KEY>001</KEY>
+     <ENTRY>No Authorization to update status</ENTRY>
+     <LENGTH>66</LENGTH>
+    </item>
+   </TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -6,7 +6,7 @@
                                        label: 'History',
                                        value: 'HisID' } },
        presentationVariant: [{ sortOrder: [{ by: 'HisId',
-                                          direction: #DESC } ],                                          
+                                          direction: #ASC } ],                                          
        visualizations: [{ type: #AS_LINEITEM}]}] }
 annotate entity zc_dt_inct_h_as with
 {

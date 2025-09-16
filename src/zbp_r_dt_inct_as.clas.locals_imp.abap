@@ -29,6 +29,14 @@ CLASS lhc_Incident DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS setdefaulthistory FOR DETERMINE ON SAVE
       IMPORTING keys FOR incident~setdefaulthistory.
+    METHODS validate_title FOR VALIDATE ON SAVE
+      IMPORTING keys FOR incident~validate_title.
+    METHODS validate_description FOR VALIDATE ON SAVE
+      IMPORTING keys FOR incident~validate_description.
+    METHODS validate_priority FOR VALIDATE ON SAVE
+      IMPORTING keys FOR incident~validate_priority.
+    METHODS validate_date FOR VALIDATE ON SAVE
+      IMPORTING keys FOR incident~validate_date.
     METHODS get_history_index EXPORTING ev_incuuid      TYPE sysuuid_x16
                               RETURNING VALUE(rv_index) TYPE zde_his_id_lgl.
     METHODS is_update_allowed
@@ -60,7 +68,7 @@ CLASS lhc_Incident IMPLEMENTATION.
           APPEND VALUE #( %tky = keys[ 1 ]-%tky
                           %msg = new_message_with_text(
                               severity = if_abap_behv_message=>severity-error
-                              text = 'No Authorization to update status!!!'
+                              text = TEXT-001
                           )
           ) TO reported-incident.
         ENDIF.
@@ -83,6 +91,15 @@ CLASS lhc_Incident IMPLEMENTATION.
        RESULT DATA(incidents)
        FAILED failed.
 
+** get title
+
+    READ ENTITIES OF zr_dt_inct_as IN LOCAL MODE
+       ENTITY Incident
+         FIELDS ( Title )
+         WITH CORRESPONDING #( keys )
+       RESULT DATA(lv_title)
+       FAILED failed.
+
 ** Disable changeStatus for Incidents Creation
     lv_history_index = 1.
     IF lines( incidents ) EQ 1.
@@ -91,9 +108,7 @@ CLASS lhc_Incident IMPLEMENTATION.
 
     result = VALUE #( FOR incident IN incidents
                           ( %tky                   = incident-%tky
-                            %action-ChangeStatus   = COND #( ""WHEN incident-Status IN lt_disableChange  OR
-                                                             WHEN incident-Status = gs_status-completed OR
-                                                                  incident-Status = gs_status-closed    OR
+                            %action-ChangeStatus   = COND #( WHEN incident-Status IN lt_disableChange  OR
                                                                   incident-Status = gs_status-canceled  OR
                                                                   lv_history_index = 0
                                                              THEN if_abap_behv=>fc-o-disabled
@@ -103,6 +118,9 @@ CLASS lhc_Incident IMPLEMENTATION.
                                                                  lv_history_index = 0
                                                             THEN if_abap_behv=>fc-o-disabled
                                                             ELSE if_abap_behv=>fc-o-enabled )
+
+                           %features-%delete      = COND #( WHEN incident-Status = gs_status-open
+                                                          THEN if_abap_behv=>fc-o-enabled ELSE if_abap_behv=>fc-o-disabled   )
                           ) ).
   ENDMETHOD.
 
@@ -118,6 +136,7 @@ CLASS lhc_Incident IMPLEMENTATION.
           ls_incident_history    TYPE zdt_inct_h_as,
           lv_max_his_id          TYPE zde_his_id_as,
           lv_wrong_status        TYPE zde_status_as.
+
 
 ** Iterate through the keys records to get parameters for validations
     READ ENTITIES OF zr_dt_inct_as IN LOCAL MODE
@@ -146,6 +165,21 @@ CLASS lhc_Incident IMPLEMENTATION.
         lv_error = abap_true.
         EXIT.
       ENDIF.
+      IF lv_status IS INITIAL.
+** Set authorizations
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incident.
+
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_incident_messages_as( textid = zcl_incident_messages_as=>status_empty
+                                                            status = lv_status
+                                                            severity = if_abap_behv_message=>severity-error )
+                        %state_area = 'VALIDATE_STATUS'
+                         ) TO reported-incident.
+        lv_error = abap_true.
+        EXIT.
+      ENDIF.
+
+
 **  It is not possible to change the pending (PE) to Completed (CO) or Closed (CL) status
       IF <incident>-Status EQ gs_status-pending AND lv_status EQ gs_status-closed OR
          <incident>-Status EQ gs_status-pending AND lv_status EQ gs_status-completed.
@@ -380,6 +414,145 @@ CLASS lhc_Incident IMPLEMENTATION.
   METHOD is_update_allowed.
 * para simulacion
     r_result = abap_true.
+  ENDMETHOD.
+
+  METHOD validate_title.
+
+    READ ENTITIES OF zr_dt_inct_as IN LOCAL MODE
+     ENTITY Incident
+       FIELDS ( Title )
+       WITH CORRESPONDING #( keys )
+     RESULT DATA(lt_titles).
+
+** TITLE VALIDATION
+
+    LOOP AT lt_titles ASSIGNING FIELD-SYMBOL(<fs_title>).
+      " Invalidate state messages
+      APPEND VALUE #(  %tky                 = <fs_title>-%tky
+                         %state_area          = 'VALIDATE_TITLE' ) TO reported-incident.
+      IF <fs_title>-Title IS INITIAL.
+        APPEND VALUE #( %tky = <fs_title>-%tky ) TO failed-incident.
+
+        APPEND VALUE #( %tky = <fs_title>-%tky
+                        %msg = NEW zcl_incident_messages_as( textid = zcl_incident_messages_as=>title_empty
+                                                            severity = if_abap_behv_message=>severity-error )
+                        %element-title = if_abap_behv=>mk-on
+                        %state_area = 'VALIDATE_TITLE'
+                         ) TO reported-incident.
+        EXIT.
+      ENDIF.
+
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD validate_description.
+
+    READ ENTITIES OF zr_dt_inct_as IN LOCAL MODE
+   ENTITY Incident
+     FIELDS ( Description )
+     WITH CORRESPONDING #( keys )
+   RESULT DATA(lt_description).
+
+** DESCRIPTION VALIDATION
+
+    LOOP AT lt_description ASSIGNING FIELD-SYMBOL(<fs_description>).
+      " Invalidate state messages
+      APPEND VALUE #(  %tky                 = <fs_description>-%tky
+                         %state_area          = 'VALIDATE_DESCRIPTION' ) TO reported-incident.
+      IF <fs_description>-Description IS INITIAL.
+        APPEND VALUE #( %tky = <fs_description>-%tky ) TO failed-incident.
+
+        APPEND VALUE #( %tky = <fs_description>-%tky
+                        %msg = NEW zcl_incident_messages_as( textid = zcl_incident_messages_as=>description_empty
+                                                            severity = if_abap_behv_message=>severity-error )
+                        %element-description = if_abap_behv=>mk-on
+                        %state_area = 'VALIDATE_DESCRIPTION'
+                         ) TO reported-incident.
+        EXIT.
+      ENDIF.
+
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD validate_priority.
+
+    READ ENTITIES OF zr_dt_inct_as IN LOCAL MODE
+ ENTITY Incident
+   FIELDS ( Priority )
+   WITH CORRESPONDING #( keys )
+ RESULT DATA(lt_priority).
+
+** DESCRIPTION VALIDATION
+
+    LOOP AT lt_priority ASSIGNING FIELD-SYMBOL(<fs_priority>).
+      " Invalidate state messages
+      APPEND VALUE #(  %tky                 = <fs_priority>-%tky
+                         %state_area          = 'VALIDATE_PRIORITY' ) TO reported-incident.
+
+      IF <fs_priority>-Priority IS INITIAL.
+        APPEND VALUE #( %tky = <fs_priority>-%tky ) TO failed-incident.
+
+        APPEND VALUE #( %tky = <fs_priority>-%tky
+                        %msg = NEW zcl_incident_messages_as( textid = zcl_incident_messages_as=>priority_empty
+                                                            severity = if_abap_behv_message=>severity-error )
+                        %element-priority = if_abap_behv=>mk-on
+                        %state_area = 'VALIDATE_PRIORITY'
+                         ) TO reported-incident.
+        EXIT.
+      ENDIF.
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD validate_date.
+
+    READ ENTITIES OF zr_dt_inct_as IN LOCAL MODE
+      ENTITY Incident
+        FIELDS ( CreationDate )
+        WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_creationdate).
+
+** DESCRIPTION VALIDATION
+
+    LOOP AT lt_creationdate ASSIGNING FIELD-SYMBOL(<fs_creationdate>).
+
+      " Invalidate state messages
+      APPEND VALUE #(  %tky                 = <fs_creationdate>-%tky
+                         %state_area          = 'VALIDATE_CREATION_DATE' ) TO reported-incident.
+
+      " Invalidate state messages
+      APPEND VALUE #(  %tky                 = <fs_creationdate>-%tky
+                         %state_area          = 'FUTURE_CREATION_DATE' ) TO reported-incident.
+
+      IF <fs_creationdate>-CreationDate IS INITIAL.
+
+        APPEND VALUE #( %tky = <fs_creationdate>-%tky ) TO failed-incident.
+
+        APPEND VALUE #( %tky = <fs_creationdate>-%tky
+                        %msg = NEW zcl_incident_messages_as( textid = zcl_incident_messages_as=>date_empty
+                                                            severity = if_abap_behv_message=>severity-error )
+                        %element-creationdate = if_abap_behv=>mk-on
+                        %state_area = 'VALIDATE_CREATION_DATE'
+                         ) TO reported-incident.
+
+        EXIT.
+      ELSEIF <fs_creationdate>-CreationDate GT cl_abap_context_info=>get_system_date( ).
+
+        APPEND VALUE #( %tky = <fs_creationdate>-%tky ) TO failed-incident.
+
+        APPEND VALUE #( %tky = <fs_creationdate>-%tky
+                        %msg = NEW zcl_incident_messages_as( textid = zcl_incident_messages_as=>date_future
+                                                            severity = if_abap_behv_message=>severity-error )
+                        %element-creationdate = if_abap_behv=>mk-on
+                        %state_area = 'FUTURE_CREATION_DATE'
+                         ) TO reported-incident.
+        EXIT.
+      ENDIF.
+
+    ENDLOOP.
+
+
   ENDMETHOD.
 
 ENDCLASS.

@@ -23,42 +23,44 @@ CLASS zcl_brt_v_element_as IMPLEMENTATION.
     LOOP AT it_requested_calc_elements ASSIGNING FIELD-SYMBOL(<fs_requested>).
       IF <fs_requested> = 'STATUSDESCRIPTION'.
         LOOP AT lt_original_data ASSIGNING FIELD-SYMBOL(<fs_original_data>).
-          <fs_original_data>-StatusDescription = gt_status[ StatusCode = <fs_original_data>-Status ]-StatusDescription.
+          IF <fs_original_data>-Status IS NOT INITIAL.
+            <fs_original_data>-StatusDescription = gt_status[ StatusCode = <fs_original_data>-Status ]-StatusDescription.
+          ENDIF.
         ENDLOOP.
       ENDIF.
       IF <fs_requested> = 'PRIORITYDESCRIPTION'.
         LOOP AT lt_original_data ASSIGNING FIELD-SYMBOL(<fs_original_priority_data>).
-        IF <fs_original_priority_data>-Priority IS NOT INITIAL.
-          <fs_original_priority_data>-PriorityDescription = gt_priority[ PriorityCode = <fs_original_priority_data>-Priority ]-PriorityDescription.
+          IF <fs_original_priority_data>-Priority IS NOT INITIAL.
+            <fs_original_priority_data>-PriorityDescription = gt_priority[ PriorityCode = <fs_original_priority_data>-Priority ]-PriorityDescription.
           ENDIF.
         ENDLOOP.
       ENDIF.
-      ENDLOOP.
-      ct_calculated_data = CORRESPONDING #( lt_original_data ).
-    ENDMETHOD.
+    ENDLOOP.
+    ct_calculated_data = CORRESPONDING #( lt_original_data ).
+  ENDMETHOD.
 
-    METHOD if_sadl_exit_calc_element_read~get_calculation_info.
-      CASE iv_entity.
-        WHEN 'zc_dt_inct_as'.
-          LOOP AT it_requested_calc_elements INTO DATA(ls_requested_calc_elem).
-            IF ls_requested_calc_elem EQ 'status'.
-              INSERT CONV #( 'STATUSDESCRIPTION' ) INTO TABLE et_requested_orig_elements.
-            ENDIF.
-            IF ls_requested_calc_elem EQ 'priority'.
-              INSERT CONV #( 'PRIORITYDESCRIPTION' ) INTO TABLE et_requested_orig_elements.
-            ENDIF.
-          ENDLOOP.
-      ENDCASE.
-    ENDMETHOD.
+  METHOD if_sadl_exit_calc_element_read~get_calculation_info.
+    CASE iv_entity.
+      WHEN 'zc_dt_inct_as'.
+        LOOP AT it_requested_calc_elements INTO DATA(ls_requested_calc_elem).
+          IF ls_requested_calc_elem EQ 'status'.
+            INSERT CONV #( 'STATUSDESCRIPTION' ) INTO TABLE et_requested_orig_elements.
+          ENDIF.
+          IF ls_requested_calc_elem EQ 'priority'.
+            INSERT CONV #( 'PRIORITYDESCRIPTION' ) INTO TABLE et_requested_orig_elements.
+          ENDIF.
+        ENDLOOP.
+    ENDCASE.
+  ENDMETHOD.
 
-    METHOD class_constructor.
+  METHOD class_constructor.
 
-      SELECT * FROM zdd_status_vh_as
-       INTO TABLE @gt_status.
+    SELECT * FROM zdd_status_vh_as
+     INTO TABLE @gt_status.
 
 
-       SELECT * FROM zdd_priority_vh_as
-       INTO TABLE @gt_priority.
-      ENDMETHOD.
+    SELECT * FROM zdd_priority_vh_as
+    INTO TABLE @gt_priority.
+  ENDMETHOD.
 
 ENDCLASS.

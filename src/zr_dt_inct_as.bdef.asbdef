@@ -11,7 +11,7 @@ authorization master ( global, instance )
 {
   create;
   update;
-  delete;
+  delete ( features : instance );
 
   association _History { create ( features : instance ); with draft; }
 
@@ -39,6 +39,10 @@ authorization master ( global, instance )
     side effects { action changeStatus affects $self; }
 
   internal action setHistory;
+  validation validate_title on save {field title; create;update;}
+  validation validate_description on save {field description; create;update;}
+  validation validate_priority on save {field Description; create;update;}
+  validation validate_date on save {field CreationDate; create;update;}
   determination setDefaultHistory on save { create; }
 
   determination setDefaultValues on modify { create; }
@@ -46,7 +50,13 @@ authorization master ( global, instance )
   draft action Discard;
   draft action Edit;
   draft action Resume;
-  draft determine action Prepare;
+  draft determine action Prepare{
+  validation validate_title;
+  validation validate_description;
+  validation validate_priority;
+  validation validate_date;
+}
+
   mapping for zdt_inct_as
     {
       IncUUID            = inc_uuid;

@@ -20,6 +20,42 @@
      <MSGNR>002</MSGNR>
      <TEXT>With Status &amp;1, the responsible person must be entered.</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_INCT_MESSAGE_AS</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Empty Status</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_INCT_MESSAGE_AS</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Empty Title</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_INCT_MESSAGE_AS</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Empty Description</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_INCT_MESSAGE_AS</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Empty Priority</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_INCT_MESSAGE_AS</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Empty Date</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_INCT_MESSAGE_AS</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>You cannot enter a future date</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>
