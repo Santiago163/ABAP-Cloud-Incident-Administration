@@ -1,0 +1,8 @@
+@EndUserText.label: 'Control de acceso al nodo raiz'
+@MappingRole: true
+define role ZAC_INCT_AS {
+    grant select on ZR_DT_INCT_AS
+                    where responsible = $session.user
+                        or $session.user = 'CB9980003987';
+                        
+}

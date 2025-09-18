@@ -20,6 +20,14 @@ CLASS zcl_brt_v_element_as IMPLEMENTATION.
     DATA lt_original_data TYPE TABLE OF zc_dt_inct_as WITH DEFAULT KEY.
 
     lt_original_data = CORRESPONDING #( it_original_data ).
+
+    LOOP AT lt_original_data ASSIGNING FIELD-SYMBOL(<fs_draft>).
+      SELECT COUNT( * ) FROM zdt_d_inct_as WHERE  incuuid = @<fs_draft>-IncUuid INTO @DATA(lv_cta).
+      <fs_draft>-DraftStatus = '✅'.
+      IF sy-subrc = 0.
+        <fs_draft>-DraftStatus = '📝'. "'✏️'.
+      ENDIF.
+    ENDLOOP.
     LOOP AT it_requested_calc_elements ASSIGNING FIELD-SYMBOL(<fs_requested>).
       IF <fs_requested> = 'STATUSDESCRIPTION'.
         LOOP AT lt_original_data ASSIGNING FIELD-SYMBOL(<fs_original_data>).

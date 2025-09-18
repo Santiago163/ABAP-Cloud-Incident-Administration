@@ -1,0 +1,8 @@
+@EndUserText.label: 'Control de acceso para vista de consumo'
+@MappingRole: true
+define role ZAC_AC_DT_INCT_AS {
+    grant select on ZC_DT_INCT_AS
+                   where inheriting conditions from entity ZR_DT_INCT_AS;
+
+                        
+}

@@ -72,7 +72,7 @@ annotate view zc_dt_inct_as with
                importance: #LOW }],
   identification: [{ position: 80  } ]}
   //selectionField: [{ position: 80 }] }
-  StatusDescription;  
+  StatusDescription;
 
   @Consumption.valueHelpDefinition: [ {
     entity.name: 'zdd_priority_vh_as',
@@ -84,12 +84,12 @@ annotate view zc_dt_inct_as with
   identification: [{ position: 60  } ],
   selectionField: [{ position: 60 }]}
   Priority;
-  
-    @UI: {lineItem: [{ position: 90,
-               importance: #LOW }],
+
+  @UI: {lineItem: [{ position: 90,
+             importance: #LOW }],
   identification: [{ position: 90  } ]}
   //selectionField: [{ position: 90 }] }
-  PriorityDescription;  
+  PriorityDescription;
 
   @UI: {lineItem: [{ position: 70,
                importance: #LOW }],
@@ -102,13 +102,13 @@ annotate view zc_dt_inct_as with
   identification: [{ position: 150  } ]}
   //selectionField: [{ position: 150 }]}
   ChangedDate;
-  
+
   @UI: {lineItem: [{ position: 160,
                importance: #LOW }],
   identification: [{ position: 160  } ],
   selectionField: [{ position: 160 }]}
   Responsible;
-  
+
   @UI: {lineItem: [{ position: 100,
                importance: #LOW }],
   identification: [{ position: 100  } ]}
@@ -143,6 +143,10 @@ annotate view zc_dt_inct_as with
   //selectionField: [{ position: 140 }]}
   @UI.hidden: true
   LastChangedAt;
+  @UI: {lineItem: [{ position: 10,
+                 importance: #HIGH }],
+    identification: [{ position: 10  } ]}
+  DraftStatus;
 
   @UI.hidden: true
   _History;

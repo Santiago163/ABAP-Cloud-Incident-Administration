@@ -1,4 +1,4 @@
-@AccessControl.authorizationCheck: #NOT_REQUIRED
+@AccessControl.authorizationCheck: #CHECK
 @Metadata.allowExtensions: true
 @EndUserText.label: 'Incident Root View'
 define root view entity ZR_DT_INCT_AS

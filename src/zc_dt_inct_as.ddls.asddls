@@ -1,4 +1,4 @@
-@AccessControl.authorizationCheck: #NOT_REQUIRED
+@AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'Vista de consumo de incidentes'
 @Metadata.allowExtensions: true
 define root view entity zc_dt_inct_as
@@ -26,6 +26,9 @@ define root view entity zc_dt_inct_as
           LocalLastChangedBy,
           LocalLastChangedAt,
           LastChangedAt,
+          @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_BRT_V_ELEMENT_AS'
+          @EndUserText.label: 'Act'
+  virtual DraftStatus         : abap.char(5),
           /* Associations */
           _History : redirected to composition child zc_dt_inct_h_as
 }
