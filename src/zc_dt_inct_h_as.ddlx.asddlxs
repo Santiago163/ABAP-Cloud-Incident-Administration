@@ -35,6 +35,9 @@ annotate entity zc_dt_inct_h_as with
   @UI: { lineItem:       [ { position: 60, importance: #LOW } ],
          identification: [ { position: 60 } ] }
   Text;
+  @UI: { lineItem:       [ { position: 70, importance: #LOW } ],
+         identification: [ { position: 70 } ] }
+  Responsible;
   @UI.hidden:true
   LocalCreatedBy;
   @UI.hidden:true

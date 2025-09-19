@@ -223,7 +223,7 @@ CLASS lhc_Incident IMPLEMENTATION.
 
       ls_incident_history-new_status = lv_status.
       ls_incident_history-text = lv_text.
-
+      ls_incident_history-responsible = lv_responsable.
       TRY.
           ls_incident_history-inc_uuid = cl_system_uuid=>create_uuid_x16_static( ).
         CATCH cx_uuid_error INTO DATA(lo_error).
@@ -238,7 +238,8 @@ CLASS lhc_Incident IMPLEMENTATION.
                                               HisID = ls_incident_history-his_id
                                               PreviousStatus = <incident>-Status
                                               NewStatus = ls_incident_history-new_status
-                                              Text = ls_incident_history-text ) )
+                                              Text = ls_incident_history-text
+                                              responsible = ls_incident_history-responsible ) )
                                                ) TO lt_association_entity.
       ENDIF.
     ENDLOOP.
@@ -272,7 +273,8 @@ CLASS lhc_Incident IMPLEMENTATION.
                                   HisID
                                   PreviousStatus
                                   NewStatus
-                                  Text )
+                                  Text
+                                  responsible )
         AUTO FILL CID
         WITH lt_association_entity
      MAPPED mapped
@@ -364,7 +366,8 @@ CLASS lhc_Incident IMPLEMENTATION.
                                             IncUUID = <incident>-IncUUID
                                             HisID = ls_incident_history-his_id
                                             NewStatus = <incident>-Status
-                                            Text = 'First Incident' ) )
+                                            Text = text-002
+                                            responsible =  <incident>-Responsible ) )
                                              ) TO lt_association_entity.
     ENDLOOP.
     UNASSIGN <incident>.

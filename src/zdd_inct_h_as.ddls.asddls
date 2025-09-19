@@ -1,5 +1,5 @@
 @AbapCatalog.viewEnhancementCategory: [#NONE]
-@AccessControl.authorizationCheck: #NOT_REQUIRED
+@AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'Asociacion con la tabla historica'
 @Metadata.ignorePropagatedAnnotations: true
 @ObjectModel.usageType:{
@@ -17,6 +17,7 @@ define view entity zdd_inct_h_as
       previous_status as PreviousStatus,
       new_status as NewStatus,
       text as Text,
+      responsible  as Responsible,
       local_created_by as LocalCreatedBy,
       local_created_at as LocalCreatedAt,
       local_last_changed_by as LocalLastChangedBy,

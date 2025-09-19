@@ -18,14 +18,14 @@ CLASS zcl_fill_tables_as IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
 
 
-    DELETE FROM zdt_inct_h_as.
+    DELETE FROM zdt_inct_h_as WHERE 1 = 1.
 
-    DELETE FROM zdt_d_inct_h_as.
+    DELETE FROM zdt_d_inct_h_as WHERE 1 = 1.
 
 
-    DELETE FROM zdt_inct_as.
+    DELETE FROM zdt_inct_as WHERE 1 = 1.
 
-    DELETE FROM zdt_d_inct_as.
+    DELETE FROM zdt_d_inct_as where 1 = 1.
 
     SELECT
     language,

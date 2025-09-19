@@ -4,5 +4,7 @@ define role ZAC_INCT_AS {
     grant select on ZR_DT_INCT_AS
                     where responsible = $session.user
                         or $session.user = 'CB9980003987';
-                        
+ grant select on ZC_DT_INCT_H_AS;  //where inheriting conditions from entity zdd_inct_h_as;    
+ 
+ grant select on zdd_inct_h_as; //  where inheriting conditions from entity ZR_DT_INCT_AS;                  
 }

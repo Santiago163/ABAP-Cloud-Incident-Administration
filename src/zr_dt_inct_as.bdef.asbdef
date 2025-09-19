@@ -94,6 +94,7 @@ etag master LocalLastChangedAt
   field ( readonly )
   HisUuid,
   IncUuid,
+  Responsible,
   LocalCreatedBy,
   LocalCreatedAt,
   LocalLastChangedBy,
@@ -111,6 +112,7 @@ etag master LocalLastChangedAt
       PreviousStatus     = previous_status;
       NewStatus          = new_status;
       Text               = text;
+      Responsible        = responsible;
       LocalCreatedBy     = local_created_by;
       LocalCreatedAt     = local_created_at;
       LocalLastChangedBy = local_last_changed_by;

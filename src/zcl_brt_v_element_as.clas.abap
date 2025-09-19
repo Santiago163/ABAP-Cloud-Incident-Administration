@@ -63,11 +63,11 @@ CLASS zcl_brt_v_element_as IMPLEMENTATION.
 
   METHOD class_constructor.
 
-    SELECT * FROM zdd_status_vh_as
+    SELECT * FROM zdd_status_vh_as WHERE 1 = 1
      INTO TABLE @gt_status.
 
 
-    SELECT * FROM zdd_priority_vh_as
+    SELECT * FROM zdd_priority_vh_as WHERE 1 = 1
     INTO TABLE @gt_priority.
   ENDMETHOD.
 

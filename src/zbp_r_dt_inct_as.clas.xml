@@ -20,6 +20,12 @@
      <ENTRY>No Authorization to update status</ENTRY>
      <LENGTH>66</LENGTH>
     </item>
+    <item>
+     <ID>I</ID>
+     <KEY>002</KEY>
+     <ENTRY>First Incident</ENTRY>
+     <LENGTH>14</LENGTH>
+    </item>
    </TPOOL>
   </asx:values>
  </asx:abap>

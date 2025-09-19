@@ -1,7 +1,7 @@
-@AccessControl.authorizationCheck: #NOT_REQUIRED
+@AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'Vista de Consumo del historial'
 @Metadata.allowExtensions: true
-define view entity zc_dt_inct_h_as as projection on ZDD_INCT_H_AS
+define view entity zc_dt_inct_h_as as projection on zdd_inct_h_as
 {
     key HisUuid,
     key IncUuid,
@@ -9,6 +9,7 @@ define view entity zc_dt_inct_h_as as projection on ZDD_INCT_H_AS
     PreviousStatus,
     NewStatus,
     Text,
+    Responsible,
     LocalCreatedBy,
     LocalCreatedAt,
     LocalLastChangedBy,
